@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f4f4;
+      }
+      .container {
+          max-width: 1200px;
+          margin: 50px auto;
+          padding: 20px;
+          background-color: #fff;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          border-radius: 5px;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+      }
+      th, td {
+          padding: 10px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+      }
+      th {
+          background-color: #f2f2f2;
+      }
+  </style>
+
+    
+</head>
+<body>
+    <%- include ('navigation.ejs') %>
+      
+    
+
+        <div class="container">
+            <h1>Admin Panel</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>Issue</th>
+                  <th>Note</th>
+                  <th>File</th>
+                  <th>Allocate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% userTickets.forEach(ticket => { %>
+                  <tr>
+                    <td><%= ticket.name %></td>
+                    <td><%= ticket.email %></td>
+                    <td><%= ticket.phone %></td>
+                    <td><%= ticket.issue %></td>
+                    <td><%= ticket.note %></td>
+                    <td><%= ticket.file %></td>
+                    <!-- <td><button>sendtoresolver</button></td> -->
+                    <td><button class="sendToResolver" data-ticket='<%- JSON.stringify(ticket) %>'>
+                      Send to Resolver
+                    </button></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+              
+            </table>
+          </div>
+          <script>
+            const sendToResolverButtons = document.querySelectorAll('.sendToResolver');
+          
+            sendToResolverButtons.forEach(button => {
+              button.addEventListener('click', function () {
+                const ticketData = JSON.parse(this.getAttribute('data-ticket'));
+                sessionStorage.setItem('selectedTicket', JSON.stringify(ticketData));
+                window.location.href = '/resolver';
+              });
+            });
+          </script>
+
+
+          
+</body>
+</html>
+
+
+
