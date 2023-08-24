@@ -66,8 +66,11 @@
                     <td><%= ticket.file %></td>
                     <!-- <td><button>sendtoresolver</button></td> -->
                     <td><button class="sendToResolver" data-ticket='<%- JSON.stringify(ticket) %>'>
-                      Send to Resolver
+                     StartChat
                     </button></td>
+                    <!-- <td>
+                      <a href="/resolver?ticket=<%- encodeURIComponent(JSON.stringify(ticket)) %>">Send to Resolver</a>
+                    </td> -->
                   </tr>
                 <% }); %>
               </tbody>

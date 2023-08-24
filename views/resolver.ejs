@@ -50,7 +50,9 @@
           </tr>
         </thead>
          <tbody>
-           
+         
+          <% const ticketData = req.query.ticket ? JSON.parse(decodeURIComponent(req.query.ticket)) : null; %>
+          <% if (ticketData) { %>
           <tr>
             <td><%- selectedTicket.name %></td>
             <td><%- selectedTicket.email %></td>
@@ -59,8 +61,9 @@
             <td><%- selectedTicket.note %></td>
             <td><%- selectedTicket.file %></td>
           </tr>
-          <% }); %>
+       <% }%>
         </tbody>
       </table>
+      
 </body>
 </html>
