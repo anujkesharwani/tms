@@ -65,12 +65,15 @@
                     <td><%= ticket.note %></td>
                     <td><%= ticket.file %></td>
                     <!-- <td><button>sendtoresolver</button></td> -->
-                    <td><button class="sendToResolver" data-ticket='<%- JSON.stringify(ticket) %>'>
+                    <!-- <td><button class="sendToResolver" data-ticket='<%- JSON.stringify(ticket) %>'>
                      StartChat
-                    </button></td>
+                    </button></td> -->
                     <!-- <td>
                       <a href="/resolver?ticket=<%- encodeURIComponent(JSON.stringify(ticket)) %>">Send to Resolver</a>
                     </td> -->
+                    <td><form id="joinForm" action="/chat.html" method="get">
+                      <button type="submit" class="join-button" id="joinButton">Join</button>
+                    </form></td>
                   </tr>
                 <% }); %>
               </tbody>
@@ -78,15 +81,7 @@
             </table>
           </div>
           <script>
-            const sendToResolverButtons = document.querySelectorAll('.sendToResolver');
-          
-            sendToResolverButtons.forEach(button => {
-              button.addEventListener('click', function () {
-                const ticketData = JSON.parse(this.getAttribute('data-ticket'));
-                sessionStorage.setItem('selectedTicket', JSON.stringify(ticketData));
-                window.location.href = '/resolver';
-              });
-            });
+    
           </script>
 
 

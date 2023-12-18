@@ -1,26 +1,24 @@
 const express = require("express");
+const http = require("http");
 const app = express();
+const server = http.createServer(app);
+var socketio = require("socket.io");
+const io = socketio(server)
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require("path");
 const multer = require("multer");
 const UserDetails = require("./models/userDetails");
 const UserDetailssignup = require("./models/signupdata");
-app.use(express.urlencoded({ extended: true }));
-///app.use(express.static(path.join(__dirname, "public")));
-// Configure Express to use EJS as the view engine
-app.set("view engine", "ejs");
+var session = require('express-session');
+app.use('/', express.static(__dirname + '/chat'));
 
-// Middleware for parsing URL-encoded and JSON data
+app.use(express.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
-// MongoDB connection
-// const dburl =
-//   "mongodb+srv://harshdeep542001:<password>@cluster0.znwgumj.mongodb.net/?retryWrites=true&w=majority";
 const dburl ='mongodb://0.0.0.0/TicketsManagementSystem';
 mongoose.connect(dburl, { useNewUrlParser: true, useUnifiedTopology: true });
-
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
@@ -37,6 +35,15 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
+
+//session
+app.set('trust proxy',1)
+app.use(session({
+  secret : 'anuj',
+  resave: false,
+  saveUninitialized: true,
+}))
 
 // Routes
 app.get("/", function (req, res) {
@@ -59,6 +66,11 @@ app.get('/resolver', (req, res) => {
 });
 
 app.post("/user", upload.single("file"), async (req, res) => {
+  if(!req.session.isloggedin){
+    res.redirect("/login");
+    return;
+  }
+  res.render("navigation",{email:req.session.email});
   try {
     const { name, email, phone, issue, note } = req.body;
     const file = req.file ? req.file.filename : "";
@@ -138,8 +150,24 @@ app.post("/login",async function(req,res){
   }
 });
 
+
+
+
+//chat
+io.on('connection',(socket) =>{
+  console.log("connected with socket id=",socket.id)
+  //socket.on('msgsend',(data) => {
+    // console.log('received' , data.msg)               //print the masge in console
+    // io.emit('msgrece',data)                         // msg send to all client and self also
+    // socket.emit('msgrece',data)                     // masg send to only self
+    //socket.broadcast.emit('msgrece',data)              // msg send to except self and send to other
+    
+})
+//});
+
+
 // Start the server
 const port = 8081;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
